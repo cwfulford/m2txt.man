@@ -1,0 +1,100 @@
+.TH M2TXT 8l "29th March r
+.SH NAME
+.B m2txt
+- checks that host is up and specified ports are available.
+.SH SYNOPSIS
+\fBm2txt\fR [\fB-c \fI<config_file>\fR] [\fB-d\fR] [\fB-l\fR]
+[\fB-r \fI<rcpt_email_addr>\fR] [\fB-v\fR]  <\fIclientid\fR>
+.br
+.SH AVAILABILITY
+.B m2txt
+is a Bourne shell script which should work equally well on all versions of UNIX,
+Linux and Mac OS X.
+.SH DESCRIPTION
+.B m2txt
+uses 
+.B nmap
+to check that specified ports are open on a remote host. This functionality
+duplicates a small part of that in 
+.B chkfw
+but I find is useful for those clients that have sites to which I have no
+access but which nevertheless need monitoring.
+.LP
+.B NB .
+A short client id is normally given in preference to a host name on the 
+command line. This is used to identify the configuration stanza in 
+the configuration file which will have the required hostname or IP address.
+If no configuration file is found or if the client id is not found in the
+configuration file
+.B m2txt
+will assume that \fIclientid=hostname\fR.
+.SH OPTIONS
+.TP 5
+.B -c
+Use the specified configuration file in preference to the default
+\fI"/usr/local/etc/m2txt.cf"\fR. If no configuration file is found the 
+script will attempt to soldier on with the information it has from the 
+command line.
+.TP 5
+.B -l
+Use the local syslog facility to record the results of the check.
+.TP 5
+\fB-r \fR<email_address>\fR
+Send alerts to the specified user address. This will be used in preference
+to the recipient specified in the configuration file and is useful when testing
+the script. If no recipient is specified either on the command line nor in
+the configuration file
+.B m2txt 
+will send alerts to the invoking user's local mailbox. 
+.TP 5
+\fB-d\fR
+Start in debug mode. The \fB-x\fR option is set within the shell.
+.TP
+.B -v
+Set verbose mode. Ordinarily 
+.B m2txt
+operates silently unless show stopping problems are detected. In 
+.I verbose
+mode 
+.B m2txt
+reports on each significant action.
+.SH EXAMPLES
+.IP
+.ft CW
+m2txt -l -v merlin
+.ft R
+.LP
+Check that ports specified in the default configuration file,
+.I "/usr/local/m2txt.cf" ,
+are available on the host merlin and log the
+the results using the 
+.B syslog
+facility.
+.LP
+Verbose mode will be used causing
+.B m2txt
+to report significant actions to standard out or standard error.
+.LP
+.ft CW
+m2txt www.fulford.net
+.ft R
+.LP
+The script will check the configuration file for the client id
+"www.fulford.net".
+If no entry is found, as seems likely, "www.fulford.net" will be assumed to
+be a hostname and 
+.B nmap
+will be run with the "\fI-Pn\fR" option. No ports will be specified.
+.SH BUGS
+The script is quite crude having very little error checking. The consequences
+of unexpected input are untested. Where multiple ports are checked if any are open
+this is reported as success. This needs dealing with urgently.
+.SH SEE ALSO
+.IR chkdf ,
+.IR chkftpd ,
+.IR chkfw ,
+.IR clean ,
+.IR secscan .
+.SH AUTHOR
+Clifford W Fulford, City Linux. Contact fulford@fulford.net or +44 (0)709 229 5385.
+.SH HISTORY
